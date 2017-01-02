@@ -1,6 +1,6 @@
 # caanPackage
 This package contains useful functions for tasks to be completed in the Clinically Applied Affective Neuroscience Laboratory 
-at UC Davis. To install this package:
+at UC Davis. To install and use this package:
 
 ```
 install.packages("devtools") # if not already installed
