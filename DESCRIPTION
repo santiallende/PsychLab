@@ -1,10 +1,13 @@
 Package: caanPackage
 Title: What the Package Does (one line, title case)
 Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
+Authors@R: person("Santiago", "Allende", email = "santi.allende@me.com", role = c("aut", "cre"))
+Description: A set of useful functions to get things done at the CAAN Laboratory.
 Depends: R (>= 3.3.0)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+Imports:
+        dplyr (0.5.0 >=)
+        tidyr (0.6.0 >=)
 RoxygenNote: 5.0.1.9000
