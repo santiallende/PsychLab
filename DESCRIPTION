@@ -1,5 +1,5 @@
 Package: caanPackage
-Title: What the Package Does (one line, title case)
+Title: CAAN Laboratory Package
 Version: 0.0.0.9000
 Authors@R: person("Santiago", "Allende", email = "santi.allende@me.com", role = c("aut", "cre"))
 Description: A set of useful functions to get things done at the CAAN Laboratory.
