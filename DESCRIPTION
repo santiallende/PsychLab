@@ -8,6 +8,6 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports:
-        dplyr (0.5.0 >=)
-        tidyr (0.6.0 >=)
+        dplyr (>= 0.5.0),
+        tidyr (>= 0.6.0)
 RoxygenNote: 5.0.1.9000
