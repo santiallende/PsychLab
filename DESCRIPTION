@@ -2,12 +2,13 @@ Package: caanPackage
 Title: CAAN Laboratory Package
 Version: 0.0.0.9000
 Authors@R: person("Santiago", "Allende", email = "santi.allende@me.com", role = c("aut", "cre"))
-Description: A set of useful functions to get things done at the CAAN Laboratory.
-Depends: R (>= 3.3.0)
+Description: A set of useful functions to get things done at the CAAN
+    Laboratory.
+Depends:
+    R (>= 3.3.0),
+    dplyr (>= 0.5.0),
+    tidyr (>= 0.6.0)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports:
-        dplyr (>= 0.5.0),
-        tidyr (>= 0.6.0)
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 5.0.1
