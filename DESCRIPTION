@@ -8,8 +8,7 @@ Depends:
     R (>= 3.3.0),
     dplyr (>= 0.5.0),
     tidyr (>= 0.6.0),
-    ggplot2 (>= 2.2.1),
-    plotly (>= 4.5.6)
+    ggplot2 (>= 2.2.1)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
