@@ -10,7 +10,7 @@ scoreMcs(currWk, weekNum, courseName, masterFile)
 \item{currWk}{A .csv file for the current week to score that you downloaded from Qualtrics.
 Use quotes.}
 
-\item{weekNum}{Of class character denoting the current week that you are going to score.
+\item{weekNum}{Of class character denoting the current week/month that you are going to score.
 Use quotes.}
 
 \item{courseName}{The course name formatted as follows:

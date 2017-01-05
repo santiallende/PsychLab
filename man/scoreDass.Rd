@@ -10,7 +10,7 @@ scoreDass(currWk, weekNum, courseName, masterFile)
 \item{currWk}{A .csv file for the current week to score that you downloaded from Qualtrics.
 Use quotes.}
 
-\item{weekNum}{Of class character denoting the current week that you are going to score.
+\item{weekNum}{Of class character denoting the current week/month that you are going to score.
 Use quotes.}
 
 \item{courseName}{The course name formatted as follows:
@@ -37,7 +37,7 @@ that there are 16 columns to remove from the front of the Qualtrics CSV file.
 Dependencies: dplyr and tidyr.
 }
 \examples{
-scoreDass(currWk = "SacCCTWeek5A.csv", weekNum = "5A",
+scoreDass(currWk = "SacCCTWeek5A.csv", timepoint = "5A",
 courseName = "sacAprilJune2016", masterFile = "masterCCTDass.csv")
 
 }
