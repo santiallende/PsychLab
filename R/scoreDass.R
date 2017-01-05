@@ -15,7 +15,7 @@
 #' @param currWk A .csv file for the current week to score that you downloaded from Qualtrics.
 #' Use quotes.
 #'
-#' @param weekNum Of class character denoting the current week that you are going to score.
+#' @param weekNum Of class character denoting the current week/month that you are going to score.
 #' Use quotes.
 #'
 #' @param courseName The course name formatted as follows:
@@ -28,7 +28,7 @@
 #' are scoring, I will create the file for you as long as you input a file name in
 #' quotes with a .csv extension. Use quotes.
 #'
-#' @examples scoreDass(currWk = "SacCCTWeek5A.csv", weekNum = "5A",
+#' @examples scoreDass(currWk = "SacCCTWeek5A.csv", timepoint = "5A",
 #' courseName = "sacAprilJune2016", masterFile = "masterCCTDass.csv")
 #'
 #' @export
@@ -68,7 +68,7 @@ scoreDass <- function(currWk, weekNum, courseName, masterFile) {
                             matches("dass_anxiety"), matches("dass_stress"))
 
         ##add week number NOTE: change week number to current week
-        currentWk <- cbind(weekNumber = rep(weekNum, length(currentWk$ID)),
+        currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
                            currentWk)
 
         ##add course name NOTE: change if needed
@@ -80,7 +80,7 @@ scoreDass <- function(currWk, weekNum, courseName, masterFile) {
         currentWk <- gather(currentWk, subscale, value, 4:6)
 
         ##convert weekNum to factor
-        currentWk$weekNumber <- factor(currentWk$weekNumber)
+        currentWk$timepoint <- factor(currentWk$timepoint)
 
         if (file.exists(masterFile)) {
                 ##read in master csv to join
@@ -99,7 +99,7 @@ scoreDass <- function(currWk, weekNum, courseName, masterFile) {
                 ##sort by course then subscale
                 joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$course,
                                                                  joinCurrentToMaster$ID,
-                                                                 joinCurrentToMaster$weekNumber,
+                                                                 joinCurrentToMaster$timepoint,
                                                                  joinCurrentToMaster$subscale), ]
                 ##write to csv
                 write.csv(joinCurrentToMaster, masterFile, row.names = F)
@@ -113,7 +113,7 @@ scoreDass <- function(currWk, weekNum, courseName, masterFile) {
                 ##sort by id then subscale
                 currentWk <- currentWk[order(currentWk$course,
                                              currentWk$ID,
-                                             currentWk$weekNumber,
+                                             currentWk$timepoint,
                                              currentWk$subscale), ]
                 ##write to csv
                 write.csv(currentWk, masterFile, row.names = F)

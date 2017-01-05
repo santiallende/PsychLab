@@ -40,3 +40,4 @@ Dependencies: dplyr and tidyr.
 scoreMcs(currWk = "SacCCTWeek4.csv", weekNum = 4, courseName =
 "sacAprilJune2016", masterFile = "masterCCTMcs.csv")
 }
+

@@ -15,7 +15,7 @@
 #' @param currWk A .csv file for the current week to score that you downloaded from Qualtrics.
 #' Use quotes.
 #'
-#' @param weekNum Of class character denoting the current week that you are going to score.
+#' @param weekNum Of class character denoting the current week/month that you are going to score.
 #' Use quotes.
 #'
 #' @param courseName The course name formatted as follows:
@@ -82,7 +82,7 @@ scoreMcs <- function(currWk, weekNum, courseName, masterFile) {
                             matches("mcs_mot_mean"), matches("mean_mcs"))
 
         ##add week number NOTE: change week number to current week
-        currentWk <- cbind(weekNumber = rep(weekNum, length(currentWk$ID)),
+        currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
                            currentWk)
 
         ##add course name NOTE: change if needed
@@ -94,7 +94,7 @@ scoreMcs <- function(currWk, weekNum, courseName, masterFile) {
         currentWk <- gather(currentWk, subscale, value, 4:8)
 
         ##convert weekNum to factor
-        currentWk$weekNumber <- factor(currentWk$weekNumber)
+        currentWk$timepoint <- factor(currentWk$timepoint)
 
         if (file.exists(masterFile)) {
                 ##read in master csv to join
@@ -114,7 +114,7 @@ scoreMcs <- function(currWk, weekNum, courseName, masterFile) {
                 ##sort by ID then subscale
                 joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$course,
                                                                  joinCurrentToMaster$ID,
-                                                                 joinCurrentToMaster$weekNumber,
+                                                                 joinCurrentToMaster$timepoint,
                                                                  joinCurrentToMaster$subscale), ]
                 ##write to csv
                 write.csv(joinCurrentToMaster, masterFile, row.names = F)
@@ -128,7 +128,7 @@ scoreMcs <- function(currWk, weekNum, courseName, masterFile) {
                 ##sort by ID then subscale
                 currentWk <- currentWk[order(currentWk$course,
                                              currentWk$ID,
-                                             currentWk$weekNumber,
+                                             currentWk$timepoint,
                                              currentWk$subscale), ]
                 ##write to csv
                 write.csv(currentWk, masterFile, row.names = F)
