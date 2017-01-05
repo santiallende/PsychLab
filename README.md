@@ -5,7 +5,7 @@ at UC Davis. To install and use this package:
 ```
 install.packages("devtools") # if not already installed
 library("devtools") 
-install.packages("santiallende/caanPackage")
+install_github("santiallende/caanPackage")
 library("caanPackage")
 ```
 To learn how to contribute to R Packages see:
