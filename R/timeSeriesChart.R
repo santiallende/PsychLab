@@ -29,7 +29,7 @@ timeSeriesChart <- function(data, timepoint, response, tx) {
                 line + stat_summary(fun.y = mean, geom = "point", aes_string(group = tx)) +
                         stat_summary(fun.y = mean, geom = "line", aes_string(group = tx)) +
                         geom_errorbar(aes(ymin=len-se, ymax=len+se), width=.1,
-                                      aes_string(group = tx), position=pd)
+                                      aes_string(group = tx), position_dodge(0.1))
                         labs(x = "timepoint", y = "response", colour = "tx", title = substitute(data))
         }
 }
