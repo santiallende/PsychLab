@@ -28,7 +28,7 @@ timeSeriesChart <- function(data, timepoint, response, tx) {
                 line <- ggplot(data, aes_string(timepoint, response, group = 1, colour = tx))
                 line + stat_summary(fun.y = mean, geom = "point", aes_string(group = tx)) +
                         stat_summary(fun.y = mean, geom = "line", aes_string(group = tx)) +
-                        geom_errorbar(aes(ymin=response-se, ymax=response+se), width=.1, position_dodge(0.1))
+                        geom_errorbar(aes(ymin=response-se, ymax=response+se), width=.1)
                         labs(x = "timepoint", y = "response", colour = "tx", title = substitute(data))
         }
 }
