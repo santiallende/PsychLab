@@ -1,4 +1,4 @@
-#' Score DASS Scale
+#' Score Depression Anxiety Stress Scale
 #'
 #' This function can be used to score a week's worth of DASS data that has been downloaded
 #' from Qualtrics and either append it to a master.csv file or create a master.csv

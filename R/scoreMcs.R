@@ -1,4 +1,4 @@
-#' Score MCS Scale
+#' Score Multi-dimensional Compassion Scale Scale
 #'
 #' This function can be used to score a week's worth of MCS data that has been downloaded
 #' from Qualtrics and either append it to a master.csv file or create a master.csv
