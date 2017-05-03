@@ -1,14 +1,14 @@
 #' Score MCS Scale
 #'
-#' I can be used to score a week's worth of MCS data that has been downloaded
+#' This function can be used to score a week's worth of MCS data that has been downloaded
 #' from Qualtrics and either append it to a master.csv file or create a master.csv
 #' file. If your working directory has a 'master' MCS file in it (e.g., masterCCTMCS.csv)
 #' where you are combining data from courses of the same class type but from different
-#' locations, I will append this week to it and nest the data accordingly. If your working
-#' directory does not have a masterCOURSENAMEMCS.csv file in it, I will create that file
-#' (to the name of your choosing) to start you off collecting data. I assume that there are
-#' two character rows to remove below the header (i.e., rows 1 & 2). I assume that the
-#' participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_.' I assume
+#' locations, it will append this week to it and nest the data accordingly. If your working
+#' directory does not have a masterCOURSENAMEMCS.csv file in it, it will create that file
+#' (to the name of your choosing) to start you off collecting data. It assumes that there are
+#' two character rows to remove below the header (i.e., rows 1 & 2). It assumes that the
+#' participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_.' It assumes
 #' that there are 16 columns to remove from the front of the Qualtrics CSV file.
 #' Dependencies: dplyr and tidyr.
 #'
