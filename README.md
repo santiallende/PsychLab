@@ -1,12 +1,11 @@
-# caanPackage
-This package contains useful functions for tasks to be completed in the Clinically Applied Affective Neuroscience Laboratory 
-at UC Davis. To install and use this package:
+# PsychLab
+This package contains useful functions for psychology labs that implement linear mixed models. To install and use this package:
 
 ```
 install.packages("devtools") # if not already installed
 library("devtools") 
-install_github("santiallende/caanPackage")
-library("caanPackage")
+install_github("santiallende/PsychLab")
+library("PsychLab")
 ```
 To learn how to contribute to R Packages see:
 1) http://kbroman.org/pkg_primer/pages/github.html.
