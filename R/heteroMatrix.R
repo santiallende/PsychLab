@@ -1,6 +1,6 @@
 #' Heterogenous Variance-Covariance Matrix
 #'
-#' This function computes a heterogenous variance-covariance matrix from an fitted nlme object.
+#' This function computes a heterogenous variance-covariance matrix from a fitted nlme object.
 #'
 #' @param model A fitted nlme object
 #'

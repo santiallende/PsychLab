@@ -10,7 +10,7 @@ heteroMatrix(model)
 \item{model}{A fitted nlme object}
 }
 \description{
-This function computes a heterogenous variance-covariance matrix from an fitted nlme object.
+This function computes a heterogenous variance-covariance matrix from a fitted nlme object.
 }
 \examples{
 heteroMatrix(model)
