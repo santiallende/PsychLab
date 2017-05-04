@@ -2,7 +2,7 @@
 % Please edit documentation in R/scoreDass.R
 \name{scoreDass}
 \alias{scoreDass}
-\title{Score DASS Scale}
+\title{Score Depression Anxiety Stress Scale}
 \usage{
 scoreDass(currWk, weekNum, courseName, masterFile)
 }
@@ -24,15 +24,15 @@ are scoring, I will create the file for you as long as you input a file name in
 quotes with a .csv extension. Use quotes.}
 }
 \description{
-I can be used to score a week's worth of DASS data that has been downloaded
+This function can be used to score a week's worth of DASS data that has been downloaded
 from Qualtrics and either append it to a master.csv file or create a master.csv
 file. If your working directory has a 'master' DASS file in it (e.g., masterCCTDass.csv)
 where you are combining data from courses of the same class type but from different
-locations, I will append this week to it and nest the data accordingly. If your working
-directory does not have a masterCOURSENAMEDass.csv file in it, I will create that file
-(to the name of your choosing) to start you off collecting data. I assume that there are
-two character rows to remove below the header (i.e., rows 1 & 2). I assume that the
-participant ID column is labeled 'ID' and that the DASS columns begin with 'DASS_.' I assume
+locations, it will append this week to it and nest the data accordingly. If your working
+directory does not have a masterCOURSENAMEDass.csv file in it, it will create that file
+(to the name of your choosing) to start you off collecting data. It assumes that there are
+two character rows to remove below the header (i.e., rows 1 & 2). It assumes that the
+participant ID column is labeled 'ID' and that the DASS columns begin with 'DASS_.' It assumes
 that there are 16 columns to remove from the front of the Qualtrics CSV file.
 Dependencies: dplyr and tidyr.
 }
