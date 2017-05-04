@@ -9,7 +9,7 @@
 #' @export
 
 heteroMatrix <- function(model) {
-        weights <- coef(model$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) #extract #weights
+        weights <- coef(model$modelStruct$varStruct, uncons = FALSE, allCoef = TRUE) #extract weights
         cors <- corMatrix(model$modelStruct$corStruct) #extract rho matricies for id's
         cors <- cors[order(sapply(cors, length), decreasing = T)] #order id rho matricies with complete matricies at top
         cors <- cors[[1]] #select first element in ordered list to grab id that has a complete rho matrix
