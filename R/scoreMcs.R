@@ -32,7 +32,162 @@
 #' "sacAprilJune2016", masterFile = "masterCCTMcs.csv")
 #' @export
 
-scoreMcs <- function(currWk, weekNum, courseName, masterFile) {
+library(dplyr)
+library(tidyr)
+setwd("~/Desktop/QualtRicsTest")
+test <- read.csv("test.csv", header=T)
+View(test)
+
+#is.null == T eg
+#http://stackoverflow.com/questions/9166914/using-default-arguments-in-a-function
+
+#read in current week file
+test <- read.csv("test.csv",
+                 header=T,
+                 na.strings = c("", " ", "NA", "."),
+                 stringsAsFactors=FALSE)
+
+##drop first two rows and cols 1 thru 16 and 55 thru 56
+if (Qualtrics = F) {
+        test <- test[-c(1, 2), ]
+}
+
+#TO DO: if else statement for QualtRics Package
+if (dates = T) {
+        dates <- select(test, ID, StartDate, EndDate)
+}
+
+##ID needs to be character in SoH data - ensure that here so only convert MCS_ cols and leave all others
+#1) could subset out and then join
+#2) use lapply in subset TO DO): NO need for names(test) in see line 32 only if minus
+mcs <- c("MCS_1", "MCS_2", "MCS_3", "MCS_4",
+         "MCS_5", "MCS_6", "MCS_7", "MCS_8",
+         "MCS_9", "MCS_10", "MCS_11", "MCS_12",
+         "MCS_13", "MCS_14", "MCS_15", "MCS_16")
+
+test[, mcs] <- lapply(test[, mcs], as.numeric)
+
+##compute mcs 16
+#compute mcs_cognitive_mean
+test <-  test %>%
+        rowwise() %>%
+        mutate(mcs_cog_mean = (MCS_2 + MCS_5 + MCS_9 + MCS_13) / 4)
+
+#compute mcs_affective mean
+test <- test %>%
+        rowwise() %>%
+        mutate(mcs_aff_mean = (MCS_1 + MCS_6 + MCS_8 + MCS_11) / 4)
+
+#compute mcs_intentional mean
+test <- test %>%
+        rowwise() %>%
+        mutate(mcs_int_mean = (MCS_4 + MCS_10 + MCS_12 + MCS_15) / 4)
+
+#compute mcs_motivational_mean
+test <- test %>%
+        rowwise() %>%
+        mutate(mcs_mot_mean = (MCS_3 + MCS_7 + MCS_14 + MCS_16) / 4)
+
+#compute mcs total mean
+test <- test %>%
+        rowwise() %>%
+        mutate(mean_mcs = (MCS_1 + MCS_2 + MCS_3 + MCS_4 + MCS_5 +
+                                   MCS_6 + MCS_7 + MCS_8 + MCS_9 +
+                                   MCS_10 + MCS_11 + MCS_12 + MCS_13 +
+                                   MCS_14 + MCS_15 + MCS_16) / 16)
+
+#select computed vars NOTE: change id to match orig csv if error: Q5/Q7
+#not found
+test <- select(test, ID, mcs_cog_mean,
+               mcs_aff_mean, mcs_int_mean,
+               mcs_mot_mean, mean_mcs)
+
+if (dates = T) {
+
+        ##add week number NOTE: change week number to current week
+        test <- cbind(timepoint = rep("wk3", length(test$ID)),
+                      test)
+
+        ##add course name NOTE: change if needed
+        test <- cbind(course = rep("courseName",
+                                   length(test$ID)),
+                      test)
+
+        ##add date TO DO: CHOOSE APPROPRIATE JOIN
+        test <- left_join(test, dates, by = "ID")
+
+        ##convert to long format
+        test <- gather(test, subscale, value, 4:8)
+}
+
+if (dates = F) {
+
+        ##add week number NOTE: change week number to current week
+        test <- cbind(timepoint = rep("wk3", length(test$ID)),
+                      test)
+
+        ##add course name NOTE: change if needed
+        test <- cbind(course = rep("courseName",
+                                   length(test$ID)),
+                      test)
+
+        ##convert to long format
+        test <- gather(test, subscale, value, 4:8)
+
+        if (file.exists(masterFile)) {
+                ##read in master csv to join
+                masterMcs <- read.csv(masterFile,
+                                      header=T,
+                                      na.strings = c("", " ", "NA", "."))
+
+                ##join current to master
+                joinCurrentToMaster <- rbind(masterMcs, test)
+
+                ##order subscale levels and convert to factor
+                joinCurrentToMaster$subscale <- factor(joinCurrentToMaster$subscale,
+                                                       levels = c("mean_mcs", "mcs_cog_mean",
+                                                                  "mcs_aff_mean", "mcs_int_mean",
+                                                                  "mcs_mot_mean"))
+
+                ##sort by ID then subscale
+                joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$course,
+                                                                 joinCurrentToMaster$ID,
+                                                                 joinCurrentToMaster$timepoint,
+                                                                 joinCurrentToMaster$subscale), ]
+                ##write to csv
+                write.csv(joinCurrentToMaster, masterFile, row.names = F)
+
+        } else {
+                ##order subscale levels and convert to factor
+                test$subscale <- factor(test$subscale,
+                                        levels = c("mean_mcs", "mcs_cog_mean",
+                                                   "mcs_aff_mean", "mcs_int_mean",
+                                                   "mcs_mot_mean"))
+                ##sort by ID then subscale
+                test <- test[order(test$course,
+                                   test$ID,
+                                   test$timepoint,
+                                   test$subscale), ]
+                ##write to csv
+                write.csv(test, masterFile, row.names = F)
+        }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+scoreMcs("test.csv", "wk4", "test", "tes.csv")
+scoreMcs <- function(currWk, weekNum, courseName, masterFile, dates = NULL) {
 
         #read in current week file
         currentWk <- read.csv(currWk,
@@ -77,9 +232,10 @@ scoreMcs <- function(currWk, weekNum, courseName, masterFile) {
 
         #select computed vars NOTE: change id to match orig csv if error: Q5/Q7
         #not found
-        currentWk <- select(currentWk, matches("ID"), matches("mcs_cog_mean"),
-                            matches("mcs_aff_mean"), matches("mcs_int_mean"),
-                            matches("mcs_mot_mean"), matches("mean_mcs"))
+        currentWk <- select(currentWk, matches("ID"), -matches("ResponseId"),
+                            matches("mcs_cog_mean"), matches("mcs_aff_mean"),
+                            matches("mcs_int_mean"), matches("mcs_mot_mean"),
+                            matches("mean_mcs"))
 
         ##add week number NOTE: change week number to current week
         currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
@@ -87,7 +243,7 @@ scoreMcs <- function(currWk, weekNum, courseName, masterFile) {
 
         ##add course name NOTE: change if needed
         currentWk <- cbind(course = rep(courseName,
-                                           length(currentWk$ID)),
+                                        length(currentWk$ID)),
                            currentWk)
 
         ##convert to long format
