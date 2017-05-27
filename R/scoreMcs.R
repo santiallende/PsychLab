@@ -1,205 +1,64 @@
 #' Score Multi-dimensional Compassion Scale Scale
 #'
-#' This function can be used to score a week's worth of MCS data that has been downloaded
-#' from Qualtrics and either append it to a master.csv file or create a master.csv
-#' file. If your working directory has a 'master' MCS file in it (e.g., masterCCTMCS.csv)
-#' where you are combining data from courses of the same class type but from different
-#' locations, it will append this week to it and nest the data accordingly. If your working
-#' directory does not have a masterCOURSENAMEMCS.csv file in it, it will create that file
-#' (to the name of your choosing) to start you off collecting data. It assumes that there are
-#' two character rows to remove below the header (i.e., rows 1 & 2). It assumes that the
-#' participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_.' It assumes
-#' that there are 16 columns to remove from the front of the Qualtrics CSV file.
-#' Dependencies: dplyr and tidyr.
+#' This function can be used to score MCS data that has been downloaded
+#' from Qualtrics (manually or via the API) and either append it to a <master.csv>
+#' file or create a <master.csv> for you. A <master.csv> file is a file in long format that
+#' contains multiple timepoints of scored MCS data (e.g., weeks 1-n). If manually
+#' downloaded from Qualtrics, it will remove rows 1 and 2. It assumes that the
+#' participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_.'
+#' It assumes that there are 16 columns to remove from the front of the Qualtrics CSV file.
 #'
-#' @param currWk A .csv file for the current week to score that you downloaded from Qualtrics.
-#' Use quotes.
+#' @param currWk A .csv file with a timepoint worth of MCS data to score. Use quotes.
 #'
-#' @param weekNum Of class character denoting the current week/month that you are going to score.
-#' Use quotes.
+#' @param weekNum Of class character denoting the current week to score. This will add ###################weekNum should be timepoint or something because not all people will collect on a weekly basis.
+#' that character to a 'timepoint column' Use quotes.
 #'
-#' @param courseName The course name formatted as follows:
-#' locationBeginningAndEndingMonthofCourseYear, where the location is a 3 letter
-#' abbreviation and the beginning and ending months are shortened to 3 letters if
-#' longer than 5 letters and do not include follow-up months. Use quotes. See example.
+#' @param masterFile A .csv file that includes computed MCS scores from all scored timepoints.
+#' If this is the first timepoint to score, it will create the master file to the name of
+#' your choosing (e.g., masterMCS.csv). Use quotes and a .csv extension.
 #'
-#' @param masterFile A .csv file that includes computed MCS scores from all courses
-#' of a specific type. If this is the first course of a specific class type that you
-#' are scoring, I will create the file for you as long as you input a file name in
-#' quotes with a .csv extension. Use quotes.
+#' @param dates Defaults to FALSE. Set to TRUE If you'd like the start and end
+#' dates/times of survey completion for each participant(in 2 separate columns).
+#'
+#' @param QualtRics Defaults to FALSE. Set to TRUE if you accessed the data through
+#' the QualtRics R package (Qualtrics API). This will read an object of class dataframe
+#' and will not remove the first two rows of the dataframe.
 #'
 #' @examples scoreMcs(currWk = "SacCCTWeek4.csv", weekNum = 4, courseName =
-#' "sacAprilJune2016", masterFile = "masterCCTMcs.csv")
+#' "sacAprilJune2016", masterFile = "masterCCTMcs.csv", dates = FALSE, QualtRics = FALSE)
+#'
 #' @export
+#' @importFrom dplyr select rowwise mutate left_join
+#' @importFrom tidyr gather
 
-library(dplyr)
-library(tidyr)
-setwd("~/Desktop/QualtRicsTest")
-test <- read.csv("test.csv", header=T)
-View(test)
+scoreMcs <- function(currWk, weekNum, masterFile, dates = FALSE, QualtRics = FALSE) {
 
-#is.null == T eg
-#http://stackoverflow.com/questions/9166914/using-default-arguments-in-a-function
-
-#read in current week file
-test <- read.csv("test.csv",
-                 header=T,
-                 na.strings = c("", " ", "NA", "."),
-                 stringsAsFactors=FALSE)
-
-##drop first two rows and cols 1 thru 16 and 55 thru 56
-if (Qualtrics = F) {
-        test <- test[-c(1, 2), ]
-}
-
-#TO DO: if else statement for QualtRics Package
-if (dates = T) {
-        dates <- select(test, ID, StartDate, EndDate)
-}
-
-##ID needs to be character in SoH data - ensure that here so only convert MCS_ cols and leave all others
-#1) could subset out and then join
-#2) use lapply in subset TO DO): NO need for names(test) in see line 32 only if minus
-mcs <- c("MCS_1", "MCS_2", "MCS_3", "MCS_4",
-         "MCS_5", "MCS_6", "MCS_7", "MCS_8",
-         "MCS_9", "MCS_10", "MCS_11", "MCS_12",
-         "MCS_13", "MCS_14", "MCS_15", "MCS_16")
-
-test[, mcs] <- lapply(test[, mcs], as.numeric)
-
-##compute mcs 16
-#compute mcs_cognitive_mean
-test <-  test %>%
-        rowwise() %>%
-        mutate(mcs_cog_mean = (MCS_2 + MCS_5 + MCS_9 + MCS_13) / 4)
-
-#compute mcs_affective mean
-test <- test %>%
-        rowwise() %>%
-        mutate(mcs_aff_mean = (MCS_1 + MCS_6 + MCS_8 + MCS_11) / 4)
-
-#compute mcs_intentional mean
-test <- test %>%
-        rowwise() %>%
-        mutate(mcs_int_mean = (MCS_4 + MCS_10 + MCS_12 + MCS_15) / 4)
-
-#compute mcs_motivational_mean
-test <- test %>%
-        rowwise() %>%
-        mutate(mcs_mot_mean = (MCS_3 + MCS_7 + MCS_14 + MCS_16) / 4)
-
-#compute mcs total mean
-test <- test %>%
-        rowwise() %>%
-        mutate(mean_mcs = (MCS_1 + MCS_2 + MCS_3 + MCS_4 + MCS_5 +
-                                   MCS_6 + MCS_7 + MCS_8 + MCS_9 +
-                                   MCS_10 + MCS_11 + MCS_12 + MCS_13 +
-                                   MCS_14 + MCS_15 + MCS_16) / 16)
-
-#select computed vars NOTE: change id to match orig csv if error: Q5/Q7
-#not found
-test <- select(test, ID, mcs_cog_mean,
-               mcs_aff_mean, mcs_int_mean,
-               mcs_mot_mean, mean_mcs)
-
-if (dates = T) {
-
-        ##add week number NOTE: change week number to current week
-        test <- cbind(timepoint = rep("wk3", length(test$ID)),
-                      test)
-
-        ##add course name NOTE: change if needed
-        test <- cbind(course = rep("courseName",
-                                   length(test$ID)),
-                      test)
-
-        ##add date TO DO: CHOOSE APPROPRIATE JOIN
-        test <- left_join(test, dates, by = "ID")
-
-        ##convert to long format
-        test <- gather(test, subscale, value, 4:8)
-}
-
-if (dates = F) {
-
-        ##add week number NOTE: change week number to current week
-        test <- cbind(timepoint = rep("wk3", length(test$ID)),
-                      test)
-
-        ##add course name NOTE: change if needed
-        test <- cbind(course = rep("courseName",
-                                   length(test$ID)),
-                      test)
-
-        ##convert to long format
-        test <- gather(test, subscale, value, 4:8)
-
-        if (file.exists(masterFile)) {
-                ##read in master csv to join
-                masterMcs <- read.csv(masterFile,
-                                      header=T,
-                                      na.strings = c("", " ", "NA", "."))
-
-                ##join current to master
-                joinCurrentToMaster <- rbind(masterMcs, test)
-
-                ##order subscale levels and convert to factor
-                joinCurrentToMaster$subscale <- factor(joinCurrentToMaster$subscale,
-                                                       levels = c("mean_mcs", "mcs_cog_mean",
-                                                                  "mcs_aff_mean", "mcs_int_mean",
-                                                                  "mcs_mot_mean"))
-
-                ##sort by ID then subscale
-                joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$course,
-                                                                 joinCurrentToMaster$ID,
-                                                                 joinCurrentToMaster$timepoint,
-                                                                 joinCurrentToMaster$subscale), ]
-                ##write to csv
-                write.csv(joinCurrentToMaster, masterFile, row.names = F)
-
+        #if not from API read in csv current week file
+        if (QualtRics == FALSE) {
+                currentWk <- readCsv(currWk)
         } else {
-                ##order subscale levels and convert to factor
-                test$subscale <- factor(test$subscale,
-                                        levels = c("mean_mcs", "mcs_cog_mean",
-                                                   "mcs_aff_mean", "mcs_int_mean",
-                                                   "mcs_mot_mean"))
-                ##sort by ID then subscale
-                test <- test[order(test$course,
-                                   test$ID,
-                                   test$timepoint,
-                                   test$subscale), ]
-                ##write to csv
-                write.csv(test, masterFile, row.names = F)
+                currentWk <- currWk
         }
-}
 
+        ##drop first two rows if not from API
+        if (QualtRics == FALSE) {
+                currentWk <- currentWk[-c(1, 2), ]
+        }
 
+        if (dates == TRUE) {
+                qDates <- select(currentWk, ID, startDate = StartDate, endDate = EndDate)
+        }
 
+        #converts API atomic ID var to character
+        currentWk[, "ID"] <- as.character(currentWk[, "ID"])
 
+        ## convert only mcs cols to numeric to keep id as character, not num
+        mcs <- c("MCS_1", "MCS_2", "MCS_3", "MCS_4",
+                 "MCS_5", "MCS_6", "MCS_7", "MCS_8",
+                 "MCS_9", "MCS_10", "MCS_11", "MCS_12",
+                 "MCS_13", "MCS_14", "MCS_15", "MCS_16")
 
-
-
-
-
-
-
-
-
-
-scoreMcs("test.csv", "wk4", "test", "tes.csv")
-scoreMcs <- function(currWk, weekNum, courseName, masterFile, dates = NULL) {
-
-        #read in current week file
-        currentWk <- read.csv(currWk,
-                              header=T,
-                              na.strings = c("", " ", "NA", "."),
-                              stringsAsFactors=FALSE)
-
-        ##drop first two rows and cols 1 thru 16 and 55 thru 56
-        currentWk <- currentWk[-c(1, 2), -c(1:16)]
-
-        ##convert char to numeric, will convert char to na
-        currentWk <- as.data.frame(lapply(currentWk, as.numeric))
+        currentWk[, mcs] <- lapply(currentWk[, mcs], as.numeric)
 
         ##compute mcs 16
         #compute mcs_cognitive_mean
@@ -230,63 +89,144 @@ scoreMcs <- function(currWk, weekNum, courseName, masterFile, dates = NULL) {
                                            MCS_10 + MCS_11 + MCS_12 + MCS_13 +
                                            MCS_14 + MCS_15 + MCS_16) / 16)
 
-        #select computed vars NOTE: change id to match orig csv if error: Q5/Q7
-        #not found
-        currentWk <- select(currentWk, matches("ID"), -matches("ResponseId"),
-                            matches("mcs_cog_mean"), matches("mcs_aff_mean"),
-                            matches("mcs_int_mean"), matches("mcs_mot_mean"),
-                            matches("mean_mcs"))
+        #select computed vars
+        currentWk <- select(currentWk, ID, mcs_cog_mean,
+                       mcs_aff_mean, mcs_int_mean,
+                       mcs_mot_mean, mean_mcs)
 
-        ##add week number NOTE: change week number to current week
-        currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
-                           currentWk)
+        #mcs subscales for addDates function
+        subscales <- c("mean_mcs", "mcs_cog_mean",
+                          "mcs_aff_mean", "mcs_int_mean",
+                          "mcs_mot_mean")
 
-        ##add course name NOTE: change if needed
-        currentWk <- cbind(course = rep(courseName,
-                                        length(currentWk$ID)),
-                           currentWk)
+        #add list of dates==f and t for
 
-        ##convert to long format
-        currentWk <- gather(currentWk, subscale, value, 4:8)
+        if (dates == TRUE) {
 
-        ##convert weekNum to factor
-        currentWk$timepoint <- factor(currentWk$timepoint)
+                ##add week number NOTE: change week number to current week
+                currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
+                                   currentWk)
 
-        if (file.exists(masterFile)) {
-                ##read in master csv to join
-                masterMcs <- read.csv(masterFile,
-                                      header=T,
-                                      na.strings = c("", " ", "NA", "."))
+                ##add date
+                currentWk <- left_join(currentWk, qDates, by = "ID")
 
-                ##join current to master
-                joinCurrentToMaster <- rbind(masterMcs, currentWk)
+                ## reorder cols so ID, timepoint, date
+                currentWk <- currentWk[c("ID", "timepoint", "startDate", "endDate",
+                               "mcs_cog_mean", "mcs_aff_mean", "mcs_int_mean",
+                               "mcs_mot_mean", "mean_mcs")]
 
-                ##order subscale levels and convert to factor
-                joinCurrentToMaster$subscale <- factor(joinCurrentToMaster$subscale,
-                                                       levels = c("mean_mcs", "mcs_cog_mean",
-                                                                  "mcs_aff_mean", "mcs_int_mean",
-                                                                  "mcs_mot_mean"))
+                ##convert to long format
+                currentWk <- gather(currentWk, subscale, value, 5:9)
 
-                ##sort by ID then subscale
-                joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$course,
-                                                                 joinCurrentToMaster$ID,
-                                                                 joinCurrentToMaster$timepoint,
-                                                                 joinCurrentToMaster$subscale), ]
-                ##write to csv
-                write.csv(joinCurrentToMaster, masterFile, row.names = F)
+                if (file.exists(masterFile)) {
+                        ##read in master csv to join
+                        masterMcs <- readCsv(masterFile)
+
+                        ##join current to master
+                        joinCurrentToMaster <- rbind(masterMcs, currentWk)
+
+                        ##order subscale levels and convert to factor
+                        joinCurrentToMaster$subscale <- factor(joinCurrentToMaster$subscale,
+                                                               levels = subscales)
+
+                        ##sort by ID then subscale
+                        joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$ID,
+                                                                         joinCurrentToMaster$timepoint,
+                                                                         joinCurrentToMaster$subcale), ]
+
+                        ##write to csv
+                        write.csv(joinCurrentToMaster, masterFile, row.names = F)
+
+                } else {
+                        ##order subscale levels and convert to factor
+                        currentWk$subscale <- factor(currentWk$subscale,
+                                                     levels = subscales)
+                        ##sort by ID then subscale
+                        currentWk <- currentWk[order(currentWk$ID,
+                                                     currentWk$timepoint,
+                                                     currentWk$subscale), ]
+
+                        ##write to csv
+                        write.csv(currentWk, masterFile, row.names = F)
+                }
 
         } else {
-                ##order subscale levels and convert to factor
-                currentWk$subscale <- factor(currentWk$subscale,
-                                             levels = c("mean_mcs", "mcs_cog_mean",
-                                                        "mcs_aff_mean", "mcs_int_mean",
-                                                        "mcs_mot_mean"))
-                ##sort by ID then subscale
-                currentWk <- currentWk[order(currentWk$course,
-                                             currentWk$ID,
-                                             currentWk$timepoint,
-                                             currentWk$subscale), ]
-                ##write to csv
-                write.csv(currentWk, masterFile, row.names = F)
+
+                ##add week number NOTE: change week number to current week
+                currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
+                                   currentWk)
+
+                ## reorder cols so ID, timepoint
+                currentWk <- currentWk[c("ID", "timepoint", "mcs_cog_mean",
+                               "mcs_aff_mean", "mcs_int_mean",
+                               "mcs_mot_mean", "mean_mcs")]
+
+                ##convert to long format
+                currentWk <- gather(currentWk, subscale, value, 3:7)
+
+                if (file.exists(masterFile)) {
+                        ##read in master csv to join
+                        masterMcs <- readCsv(masterFile)
+
+                        ##join current to master
+                        joinCurrentToMaster <- rbind(masterMcs, currentWk)
+
+                        ##order subscale levels and convert to factor
+                        joinCurrentToMaster$subscale <- factor(joinCurrentToMaster$subscale,
+                                                               levels = subscales)
+
+                        ##sort by ID then subscale
+                        joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$ID,
+                                                                         joinCurrentToMaster$timepoint,
+                                                                         joinCurrentToMaster$subcale), ] #add start and end?
+
+                        ##write to csv
+                        write.csv(joinCurrentToMaster, masterFile, row.names = F)
+
+                } else {
+                        ##order subscale levels and convert to factor
+                        currentWk$subscale <- factor(currentWk$subscale,
+                                                     levels = subscales)
+                        ##sort by ID then subscale
+                        currentWk <- currentWk[order(currentWk$ID,
+                                                     currentWk$timepoint,
+                                                     currentWk$subscale), ]
+
+                        ##write to csv
+                        write.csv(currentWk, masterFile, row.names = F)
+                }
+
         }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
