@@ -1,43 +1,47 @@
-#' Score Multi-dimensional Compassion Scale Scale
+#' Score Multi-dimensional Compassion Scale
 #'
 #' This function can be used to score MCS data that has been downloaded
-#' from Qualtrics (manually or via the API) and either append it to a <master.csv>
+#' from Qualtrics (manually or via the API - e.g., QualtRics package) and either append it to a <master.csv>
 #' file or create a <master.csv> for you. A <master.csv> file is a file in long format that
 #' contains multiple timepoints of scored MCS data (e.g., weeks 1-n). If manually
 #' downloaded from Qualtrics, it will remove rows 1 and 2. It assumes that the
-#' participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_.'
-#' It assumes that there are 16 columns to remove from the front of the Qualtrics CSV file.
+#' participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_' (e.g., MCS_1)
+#' It assumes that there are 16 columns to remove from the front of the Qualtrics .csv file or dataframe.
 #'
-#' @param currWk A .csv file with a timepoint worth of MCS data to score. Use quotes.
+#' @param tPoint A .csv file or API dataframe with a timepoint's worth of MCS data to score. Use quotes.
 #'
-#' @param weekNum Of class character denoting the current week to score. This will add ###################weekNum should be timepoint or something because not all people will collect on a weekly basis.
-#' that character to a 'timepoint column' Use quotes.
+#' @param tPointNum Of class character denoting the current timepoint to score. This will add
+#' that character to a 'timepoint column.' Use quotes.
 #'
 #' @param masterFile A .csv file that includes computed MCS scores from all scored timepoints.
 #' If this is the first timepoint to score, it will create the master file to the name of
 #' your choosing (e.g., masterMCS.csv). Use quotes and a .csv extension.
 #'
-#' @param dates Defaults to FALSE. Set to TRUE If you'd like the start and end
-#' dates/times of survey completion for each participant(in 2 separate columns).
+#' @param dates Defaults to FALSE. Set to TRUE if you'd like the start and end
+#' dates/times of survey completion for each participant (in 2 separate columns).
 #'
 #' @param QualtRics Defaults to FALSE. Set to TRUE if you accessed the data through
 #' the QualtRics R package (Qualtrics API). This will read an object of class dataframe
 #' and will not remove the first two rows of the dataframe.
 #'
-#' @examples scoreMcs(currWk = "SacCCTWeek4.csv", weekNum = 4, courseName =
+#' @examples scoreMcs(tPoint = "SacCCTWeek4.csv", tPointNum = 4, courseName =
 #' "sacAprilJune2016", masterFile = "masterCCTMcs.csv", dates = FALSE, QualtRics = FALSE)
 #'
 #' @export
 #' @importFrom dplyr select rowwise mutate left_join
 #' @importFrom tidyr gather
 
-scoreMcs <- function(currWk, weekNum, masterFile, dates = FALSE, QualtRics = FALSE) {
+setwd("~/Desktop/PsychLabMisc")
+
+scoreMcs("test.csv", 4, "t1.csv")
+
+scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = FALSE) {
 
         #if not from API read in csv current week file
         if (QualtRics == FALSE) {
-                currentWk <- readCsv(currWk)
+                currentWk <- readCsv(tPoint)
         } else {
-                currentWk <- currWk
+                currentWk <- tPoint
         }
 
         ##drop first two rows if not from API
@@ -48,6 +52,8 @@ scoreMcs <- function(currWk, weekNum, masterFile, dates = FALSE, QualtRics = FAL
         if (dates == TRUE) {
                 qDates <- select(currentWk, ID, startDate = StartDate, endDate = EndDate)
         }
+
+        ##if duplicates T then do evertthing and assign the df to currentWk
 
         #converts API atomic ID var to character
         currentWk[, "ID"] <- as.character(currentWk[, "ID"])
@@ -104,7 +110,7 @@ scoreMcs <- function(currWk, weekNum, masterFile, dates = FALSE, QualtRics = FAL
         if (dates == TRUE) {
 
                 ##add week number NOTE: change week number to current week
-                currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
+                currentWk <- cbind(timepoint = rep(tPointNum, length(currentWk$ID)),
                                    currentWk)
 
                 ##add date
@@ -153,7 +159,7 @@ scoreMcs <- function(currWk, weekNum, masterFile, dates = FALSE, QualtRics = FAL
         } else {
 
                 ##add week number NOTE: change week number to current week
-                currentWk <- cbind(timepoint = rep(weekNum, length(currentWk$ID)),
+                currentWk <- cbind(timepoint = rep(tPointNum, length(currentWk$ID)),
                                    currentWk)
 
                 ## reorder cols so ID, timepoint
