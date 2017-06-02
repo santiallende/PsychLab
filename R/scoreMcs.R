@@ -31,10 +31,6 @@
 #' @importFrom dplyr select rowwise mutate left_join
 #' @importFrom tidyr gather
 
-setwd("~/Desktop/PsychLabMisc")
-
-scoreMcs("test.csv", 4, "t1.csv")
-
 scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = FALSE) {
 
         ##if not from API read in csv current week file
