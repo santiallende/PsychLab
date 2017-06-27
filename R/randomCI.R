@@ -12,6 +12,7 @@
 #' @examples randomCI(model1, "time")
 #'
 #' @export
+#'
 randomCI <- function(model, Param) {
         Param <- noquote(Param)
         if (Param == "Intercept") {
