@@ -1,4 +1,4 @@
-#' Random Effect 95% Confidence Intervals
+#' Random Effect Ninety-Five Percent Confidence Intervals
 #'
 #' This function computes a random effect 95% confidence interval from
 #' a fitted nlme object. That is, it computes an estimate of individual

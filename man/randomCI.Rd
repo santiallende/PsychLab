@@ -2,7 +2,7 @@
 % Please edit documentation in R/randomCI.R
 \name{randomCI}
 \alias{randomCI}
-\title{Random Effect 95% Confidence Intervals}
+\title{Random Effect Ninety-Five Percent Confidence Intervals}
 \usage{
 randomCI(model, Param)
 }
