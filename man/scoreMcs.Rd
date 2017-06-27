@@ -2,22 +2,23 @@
 % Please edit documentation in R/scoreMcs.R
 \name{scoreMcs}
 \alias{scoreMcs}
-\title{Score Multi-dimensional Compassion Scale Scale}
+\title{Score Multi-dimensional Compassion Scale}
 \usage{
-scoreMcs(currWk, weekNum, masterFile, dates = FALSE, QualtRics = FALSE)
+scoreMcs(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = FALSE,
+  duplicates = FALSE)
 }
 \arguments{
-\item{currWk}{A .csv file with a timepoint worth of MCS data to score. Use quotes.}
+\item{tPoint}{A .csv file or API dataframe with a timepoint's worth of MCS data to score. Use quotes.}
 
-\item{weekNum}{Of class character denoting the current week to score. This will add ###################weekNum should be timepoint or something because not all people will collect on a weekly basis.
-that character to a 'timepoint column' Use quotes.}
+\item{tPointNum}{Of class character denoting the current timepoint to score. This will add
+that character to a 'timepoint column.' Use quotes.}
 
 \item{masterFile}{A .csv file that includes computed MCS scores from all scored timepoints.
 If this is the first timepoint to score, it will create the master file to the name of
 your choosing (e.g., masterMCS.csv). Use quotes and a .csv extension.}
 
-\item{dates}{Defaults to FALSE. Set to TRUE If you'd like the start and end
-dates/times of survey completion for each participant(in 2 separate columns).}
+\item{dates}{Defaults to FALSE. Set to TRUE if you'd like the start and end
+dates/times of survey completion for each participant (in 2 separate columns).}
 
 \item{QualtRics}{Defaults to FALSE. Set to TRUE if you accessed the data through
 the QualtRics R package (Qualtrics API). This will read an object of class dataframe
@@ -25,15 +26,15 @@ and will not remove the first two rows of the dataframe.}
 }
 \description{
 This function can be used to score MCS data that has been downloaded
-from Qualtrics (manually or via the API) and either append it to a <master.csv>
+from Qualtrics (manually or via the API - e.g., QualtRics package) and either append it to a <master.csv>
 file or create a <master.csv> for you. A <master.csv> file is a file in long format that
 contains multiple timepoints of scored MCS data (e.g., weeks 1-n). If manually
 downloaded from Qualtrics, it will remove rows 1 and 2. It assumes that the
-participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_.'
-It assumes that there are 16 columns to remove from the front of the Qualtrics CSV file.
+participant ID column is labeled 'ID' and that the MCS columns begin with 'MCS_' (e.g., MCS_1)
+It assumes that there are 16 columns to remove from the front of the Qualtrics .csv file or dataframe.
 }
 \examples{
-scoreMcs(currWk = "SacCCTWeek4.csv", weekNum = 4, courseName =
+scoreMcs(tPoint = "SacCCTWeek4.csv", tPointNum = 4, courseName =
 "sacAprilJune2016", masterFile = "masterCCTMcs.csv", dates = FALSE, QualtRics = FALSE)
 
 }

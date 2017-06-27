@@ -2,12 +2,14 @@ Package: PsychLab
 Title: PsychLab Package
 Version: 0.0.0.9000
 Authors@R: person("Santiago", "Allende", email = "santi.allende@me.com", role = c("aut", "cre"))
-Description: A set of useful functions for psychology labs that implement linear mixed models.
+Description: This package serves 2 purposes. The first is to provide functions that automate the collection, scoring and structuring of commonly used psychological scales. The second is to provide useful functions for psychology labs that implement 2-level linear mixed models.
 Depends:
     R (>= 3.3.0),
     dplyr (>= 0.5.0),
     tidyr (>= 0.6.0),
-    ggplot2 (>= 2.2.1)
+    lubridate (>= 1.6.0),
+    ggplot2 (>= 2.2.1),
+    nlme (>= 3.1)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

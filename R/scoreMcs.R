@@ -30,8 +30,8 @@
 #' @export
 #' @importFrom dplyr select rowwise mutate left_join
 #' @importFrom tidyr gather
-
-scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = FALSE) {
+#' @importFrom lubridate parse_date_time
+scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = FALSE, duplicates = FALSE) {
 
         ##if not from API read in csv current week file
         if (QualtRics == FALSE) {
@@ -50,10 +50,20 @@ scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = F
                 qDates <- select(currentWk, ID, startDate = StartDate, endDate = EndDate)
         }
 
-        ##if duplicates T then do evertthing and assign the df to currentWk
-
         ##converts API atomic ID var to character
         currentWk[, "ID"] <- as.character(currentWk[, "ID"])
+
+        ##if duplicates T then do evertthing and assign the df to currentWk
+        if (duplicates == TRUE) {
+              currentWk$EndDate <- parse_date_time(currentWk$EndDate, orders = c("ymd HMS"))
+              currentWk$naCount <- rowSums(is.na(currentWk[, 18:33]))
+              currentWk <- currentWk %>%
+                      group_by(ID) %>% #group rows by id
+                      arrange(., naCount, EndDate) %>% #sort by total NA in ascending, if tie then by date
+                      filter(row_number() == 1) %>% #choose index 0/1 in that list
+                      ungroup()
+              currentWk <- select(currentWk, -c(EndDate, naCount))
+        }
 
         ## convert only mcs cols to numeric to keep id as character, not num
         mcs <- c("MCS_1", "MCS_2", "MCS_3", "MCS_4",
@@ -103,6 +113,13 @@ scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = F
                           "mcs_mot_mean")
 
         #add list of dates==f and t for
+        datesF <- c("ID", "timepoint", "mcs_cog_mean",
+                    "mcs_aff_mean", "mcs_int_mean",
+                    "mcs_mot_mean", "mean_mcs")
+
+        datesT <- c("ID", "timepoint", "startDate", "endDate",
+                    "mcs_cog_mean", "mcs_aff_mean", "mcs_int_mean",
+                    "mcs_mot_mean", "mean_mcs")
 
         if (dates == TRUE) {
 
@@ -114,9 +131,7 @@ scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = F
                 currentWk <- left_join(currentWk, qDates, by = "ID")
 
                 ## reorder cols so ID, timepoint, date
-                currentWk <- currentWk[c("ID", "timepoint", "startDate", "endDate",
-                               "mcs_cog_mean", "mcs_aff_mean", "mcs_int_mean",
-                               "mcs_mot_mean", "mean_mcs")]
+                currentWk <- currentWk[c(datesT)]
 
                 ##convert to long format
                 currentWk <- gather(currentWk, subscale, value, 5:9)
@@ -160,9 +175,7 @@ scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = F
                                    currentWk)
 
                 ## reorder cols so ID, timepoint
-                currentWk <- currentWk[c("ID", "timepoint", "mcs_cog_mean",
-                               "mcs_aff_mean", "mcs_int_mean",
-                               "mcs_mot_mean", "mean_mcs")]
+                currentWk <- currentWk[c(datesF)]
 
                 ##convert to long format
                 currentWk <- gather(currentWk, subscale, value, 3:7)
@@ -181,7 +194,7 @@ scoreMcs <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = F
                         ##sort by ID then subscale
                         joinCurrentToMaster <- joinCurrentToMaster[order(joinCurrentToMaster$ID,
                                                                          joinCurrentToMaster$timepoint,
-                                                                         joinCurrentToMaster$subcale), ] #add start and end?
+                                                                         joinCurrentToMaster$subcale), ]
 
                         ##write to csv
                         write.csv(joinCurrentToMaster, masterFile, row.names = F)
