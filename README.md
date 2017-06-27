@@ -1,5 +1,5 @@
 # PsychLab
-This package contains useful functions for psychology labs that implement linear mixed models. To install and use this package:
+This package serves 2 purposes. The first is to provide functions that automate the collection, scoring and structuring of commonly used psychological scales. The second is to provide useful functions for psychology labs that implement 2-level linear mixed models.
 
 ```
 install.packages("devtools") # if not already installed
