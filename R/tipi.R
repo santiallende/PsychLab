@@ -42,13 +42,13 @@
 #' the name of the group (i.e., treatment group) that you are scoring. Use quotes.
 #'
 #' @examples scoreTIPI(
-#' tPoint = "PreCourse_Survey.csv",
-#' tPointNum = "4",
-#' masterFile = "masterTIPI.csv",
-#' dates = FALSE,
-#' QualtRics = FALSE,
-#' duplicates = FALSE,
-#' group = "Tx_1A")
+#'      tPoint = "PreCourse_Survey.csv",
+#'      tPointNum = "4",
+#'      masterFile = "masterTIPI.csv",
+#'      dates = FALSE,
+#'      QualtRics = FALSE,
+#'      duplicates = FALSE,
+#'      group = "Tx_1A")
 #'
 #' @export
 #' @importFrom dplyr select rowwise mutate left_join
