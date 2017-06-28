@@ -30,11 +30,11 @@
 #' This code chunk will choose the survey with the lowest number of missing values, if there
 #' is a tie in the number of missing values (e.g., both surveys have 1 missing value), it
 #' will choose the survey with the earliest timestamp. NOTE: if you manually
-#' download the .csv files from Qualtrics and open them in excel prior to scoring them,
-#' excel will change the date format and this code chunk will not execute.
-#' So, either do not open the files in excel after downloading them from qualtrics or
-#' open them in excel and do the following... highlight all dates in the file,
-#' right click > format cells > custom, and in the "Type" text field insert:
+#' download the .csv files from Qualtrics and open them in Excel prior to scoring them,
+#' Excel will change the date format and this code chunk will not execute.
+#' So, either do not open the files in Excel after downloading them from Qualtrics or
+#' open them in Excel and do the following... highlight all dates in the file,
+#' right click > Format Cells > Custom, and in the "Type" text field insert:
 #' yyyy-mm-dd hh:mm:ss. This will convert the dates to the appropriate format. This is
 #' not an issue if you access the data through the API via QualtRics.
 #'
