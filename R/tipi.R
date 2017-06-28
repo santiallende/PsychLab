@@ -9,7 +9,9 @@
 #' It assumes that there are 16 columns to remove from the front of the Qualtrics .csv file
 #' or dataframe (unless dates parameter is specified).
 #'
-#' @param tPoint A .csv file or API dataframe with a timepoint's worth of TIPI data to score. Use quotes.
+#' @param tPoint A .csv file or API dataframe with a timepoint's worth of TIPI data to score. Use quotes
+#' and a .csv extension if you manually downloaded the data from Qualtrics. If you are accessing the data
+#' via the API (e.g., QualtRics Package) simply enter the name of the dataframe (without quotes).
 #'
 #' @param tPointNum Of class character denoting the current timepoint to score. This will add
 #' that character to a 'timepoint column.' Use quotes.
