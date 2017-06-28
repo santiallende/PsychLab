@@ -32,12 +32,6 @@
 #' @importFrom tidyr gather
 #' @importFrom lubridate parse_date_time
 #'
-
-
-
-
-
-
 scoreTIPI <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = FALSE, duplicates = FALSE, group = NULL) {
 
         ##if not from API read in csv current week file
