@@ -1,6 +1,6 @@
 #' Random Effect Ninety-Five Percent Confidence Intervals
 #'
-#' This function computes a random effect 95% confidence interval from
+#' This function computes a random effect 95\% percent confidence interval from
 #' a fitted nlme object. That is, it computes an estimate of individual
 #' differences (i.e., random effect variation) for a fixed effect. This
 #' function is specific to 2-level models.

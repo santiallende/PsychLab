@@ -6,13 +6,13 @@
 #' 2-level models. Note that model1 is nested in model2.
 #'
 #' @param model1 A fitted nlme object with fewer fixed effect
-#' parameters than model B, but with an equal number of variance components.
+#' parameters than model 2, but with an equal number of variance components.
 #'
 #' @param model2 A fitted nlme object with more fixed effect
-#' parameters than model B, but with an equal number of variance components.
+#' parameters than model 1, but with an equal number of variance components.
 #'
 #' @param varParam The variance component that you are interested in
-#' computing an pseudo R-squared for. That is, the variance component
+#' computing a pseudo R-squared for. That is, the variance component
 #' that you expect to change due to adding a fixed effect.
 #'
 #' @examples randomCI(model1, "time")
