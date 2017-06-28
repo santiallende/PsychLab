@@ -6,7 +6,8 @@
 #' contains one or more timepoints of scored TIPI data (e.g., weeks 1-n). If manually
 #' downloaded from Qualtrics, it will remove rows 1 and 2. It assumes that the
 #' participant ID column is labeled 'ID' and that the TIPI columns begin with 'TIPI_' (e.g., TIPI_1)
-#' It assumes that there are 16 columns to remove from the front of the Qualtrics .csv file or dataframe.
+#' It assumes that there are 16 columns to remove from the front of the Qualtrics .csv file
+#' or dataframe (unless dates parameter is specified).
 #'
 #' @param tPoint A .csv file or API dataframe with a timepoint's worth of TIPI data to score. Use quotes.
 #'
