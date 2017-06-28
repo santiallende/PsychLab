@@ -24,8 +24,30 @@
 #' the QualtRics R package (Qualtrics API). This will read an object of class dataframe
 #' and will not remove the first two rows of the dataframe.
 #'
-#' @examples scoreTIPI(tPoint = "SacCCTWeek4.csv", tPointNum = 4,
-#' masterFile = "masterCCTTIPI.csv", dates = FALSE, QualtRics = FALSE)
+#' @param duplicates Defaults to NULL. This parameter will correct for when participants manage
+#' to take the Qualtrics survey more than once (e.g., a participant took the baseline survey twice).
+#' This code chunk will choose the survey with the lowest number of missing values, if there
+#' is a tie in the number of missing values (e.g., both surveys have 1 missing value), it
+#' will choose the survey with the earliest timestamp. NOTE: if you manually
+#' download the .csv files from Qualtrics and open them in excel prior to scoring them,
+#' excel will change the date format and this code chunk will not execute.
+#' So, either do not open the files in excel after downloading them from qualtrics or
+#' open them in excel and do the following... highlight all dates in the file,
+#' right click > format cells > custom, and in the "Type" text field insert:
+#' yyyy-mm-dd hh:mm:ss. This will convert the dates to the appropriate format. This is
+#' not an issue if you access the data through the API via QualtRics.
+#'
+#' @param group This will add a column called groups and fill in the rows with
+#' the name of the group (i.e., treatment group) that you are scoring. Use quotes.
+#'
+#' @examples scoreTIPI(
+#' tPoint = "PreCourse_Survey.csv",
+#' tPointNum = "4",
+#' masterFile = "masterTIPI.csv",
+#' dates = FALSE,
+#' QualtRics = FALSE,
+#' duplicates = FALSE,
+#' group = "Tx_1A")
 #'
 #' @export
 #' @importFrom dplyr select rowwise mutate left_join
@@ -59,7 +81,8 @@ scoreTIPI <- function(tPoint, tPointNum, masterFile, dates = FALSE, QualtRics = 
                  "TIPI_5", "TIPI_6", "TIPI_7", "TIPI_8",
                  "TIPI_9", "TIPI_10")
 
-        ##if duplicates T then do below and assign the df to currentWk #make this work after people open csv with excel - excel changes date format
+        ##if duplicates T then do below and assign the df to currentWk #make this work after people open csv with excel - excel changes date format from
+        #2016-01-05 02:58:02 to 8/2/2016  9:14:00 PM
         if (duplicates == TRUE) {
                 currentWk$EndDate <- parse_date_time(currentWk$EndDate, orders = c("ymd HMS"))
                 currentWk$naCount <- rowSums(is.na(currentWk[, tipi]))
